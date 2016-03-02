@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Correlation Explorer in D3.js</title>
+  
+  <script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
+  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script type='text/javascript' src="correxplorer.js"></script>
+  <link rel="stylesheet" type="text/css" href="correxplorer.css">
+</head>
+
+<body>
+     <br/>
+      <div class="form-horizontal">
+       <div class="form-group">
+      <label for="arrayType" class="col-sm-2 control-label">Analysis Type</label>       
+        <div class="col-sm-6">
+               <select id="arrayType" class="form-control">
+                       <option value="Header" selected>Header</option>
+                       <option value="Trailer">Trailer</option>
+               </select>   
+      </div>
+    </div>        
+    <div class="form-group">
+             <label for="byteLength" class="col-sm-2 control-label">Byte Length</label> 
+                    <div class="col-sm-6">
+                     <select id="byteLength" class="form-control">
+                      <option value="4">4</option>
+                      <option value="8">8</option>
+                      <option value="16">16</option>
+                      <option value="100" selected>100</option>
+               </select>          
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="fileType" class="col-sm-2 control-label">File Type</label>
+             <div class="col-sm-6">
+              <select id="fileType" class="form-control">
+                   <option value="gif">GIF</option>
+                   <option value="mpeg">MPEG</option>
+                   <option value="png">PNG</option>
+                   <option value="pdf">PDF</option>
+                   <option value="mp4">MP4</option>
+               </select>
+    </div>
+          </div>
+    <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-6">
+             <button id="file_load" class="btn btn-default">Load CSV!</button>
+        </div>
+        </div>
+        </div>
+
+   
+<!--    <input type="text" value="Header/Header_png_100.csv" id="file_path">-->
+<!--
+    Transpose?
+    <input type="checkbox" id="transpose">
+-->
+    
+<!--    <button id="js_comparison">or generate JS comparison table?</button>-->
+<!--
+  
+    Sort by:
+    <select id="sort_func">
+      <option value="abs_value">by Absolute Value</option>
+      <option value="value" selected="selected">by Value</option>
+      <option value="similarity">by Similarity</option>
+      <option value="alphabetic">Alphabetic</option>
+      <option value="original">Original</option>
+    </select>
+-->
+<!--
+
+    Keep symmetry?
+    <input type='checkbox' id="keep_symmetry" checked="true">
+    Zoom?
+    -->
+<!--    <input type='text' id="zoom" value="1.">-->
+
+  </p>
+  <div class="tooltip" style="opacity: 0.01"></div>
+  
+</body>
+
+
+</html>
+
