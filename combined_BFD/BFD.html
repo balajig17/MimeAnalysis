@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </script>
+
+</head>
+
+<style>
+body {
+  font: 10px sans-serif;
+}
+.y.axisRight text {
+    fill: orange;
+}
+.y.axisLeft text {
+    fill: steelblue;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.bar1 {
+  fill: steelblue;
+}
+.bar2 {
+  fill: orange;
+}
+.x.axis path {
+  display: none;
+}
+
+
+.d3-tip {
+  line-height: 2;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+.tip_v
+{
+    color:white;
+    font-size:100%;
+
+}
+
+.tip_h
+{
+    color:red;
+    font-size:100%;
+}
+#info
+{
+    margin-left:80px;
+}
+
+
+
+</style>
+<body>
+
+      <div class="form-horizontal">
+    <div class="form-group">
+        <label for="fileType" class="col-sm-2 control-label">File Type</label>
+             <div class="col-sm-6">
+              <select id="fileType" class="form-control">
+                   <option value="image_gif">GIF</option>
+                   <option value="image_png">PNG</option>
+                   <option value="application_pdf">PDF</option>
+                   <option value="audio_mp4">MP4</option>
+                   <option value ="text_x-matlab">MATLAB</option>
+                   <option value ="application_dif+xml">DIFF_XML</option>
+                   <option value ="application_msword">MS_WORD</option>
+                   <option value ="application_rdf+xml">RDF</option>
+                   <option value ="application_rss+xml">RSS</option>
+                   <option value = "application_vnd.google-earth.kml+xml">GOOGLE EARTH(KML)</option>
+                   <option value = "application_vnd.ms-excel">EXCEL VND</option>
+                   <option value = "application_x-sh">BOURNE SHELL SCRIPT</option>
+                   <option value = "application_xhtml+xml">XHTML</option>
+                   <option value = "image_svg+xml">IMAGE SVG</option>
+                   <option value = "application_zip">ZIP</option>
+                   <option value = "text_html">HTML</option>
+                   <option value = "image_jpeg">JPEG</option>
+                   <option value ="application_octet-stream">OCTET STREAM</option>
+
+                   
+               </select>
+    </div>
+          </div>
+    <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-6">
+             <button id="file_load" class="btn btn-default" onclick="load()">Load!</button>
+        </div>
+        </div>
+        </div>
+    
+    <div id = "visualization"></div>
+    <div id ="info">
+        <p style="color:green; font-weight:bold;">Low correlation</p> 
+        <p style="color:red;font-weight:bold;">High correlation</p>
+        <p style="color:#000000;font-weight:bold;">File 1</p>
+        <p style="color:#8c8c8c;font-weight:bold;">File 2</p>
+    </div>
+</body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+function load()
+{
+
+var filename = document.getElementById( "fileType" ).value;
+    filename+="_corr_";
+    document.getElementById("visualization").innerHTML ="";
+    
+var margin = {top: 80, right: 80, bottom: 80, left: 80},
+    width = 2500 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+var y0 = d3.scale.linear().domain([100, 1100]).range([height, 0]),
+y1 = d3.scale.linear().domain([100, 1100]).range([height, 0]);
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+// create left yAxis
+var yAxisLeft = d3.svg.axis().scale(y0).ticks(4).orient("left");
+// create right yAxis
+var yAxisRight = d3.svg.axis().scale(y1).ticks(6).orient("right");
+
+
+
+var svg = d3.select("#visualization").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("class", "graph")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    
+    
+d3.tsv(filename+".tsv", type, function(error, data) {
+  x.domain(data.map(function(d) { return d.bit; }));
+  y0.domain([0,1]);
+  y1.domain([0,1]);
+  
+  
+   var tip_d1 = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return '  <span class = "tip_h">freq:</span>'+'<span class="tip_v">' + d.corr1 +'<br/><span class = "tip_h"> byte_val:</span>'+'<span class="tip_v">' + d.bit +"</span>  "+ '<br/><span class="tip_h"> char:</span>' + '<span class = "tip_v">'+String.fromCharCode(d.bit)+'</span>'
+    ;
+  })
+  var tip_d2 = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return '  <span class = "tip_h">freq:</span>'+'<span class="tip_v">' + d.corr2 +'<br/><span class = "tip_h"> byte_val:</span>'+'<span class="tip_v">' + d.bit +"</span>  "+ '<br/><span class="tip_h"> char:</span>' + '<span class = "tip_v">'+String.fromCharCode(d.bit)+'</span>'
+  })
+  
+  
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)" );
+  svg.append("g")
+    .attr("class", "y axis axisLeft")
+    .attr("transform", "translate(0,0)")
+    .call(yAxisLeft)
+  .append("text")
+    .attr("y", 6)
+    .attr("dy", "-2em")
+    .style("text-anchor", "end")
+    .style("text-anchor", "end")
+    .text("#");
+  
+  svg.append("g")
+    .attr("class", "y axis axisRight")
+    .attr("transform", "translate(" + (width) + ",0)")
+    .call(yAxisRight)
+  .append("text")
+    .attr("y", 6)
+    .attr("dy", "-2em")
+    .attr("dx", "2em")
+    .style("text-anchor", "end")
+    .text("#");
+    
+  svg.call(tip_d1);
+  svg.call(tip_d2);
+  bars = svg.selectAll(".bar").data(data).enter();
+  bars.append("rect")
+      .attr("class", "bar1")
+      .attr("x", function(d) { return x(d.bit); })
+      .attr("width", x.rangeBand()/2)
+      .attr("y", function(d) { return y0(d.corr1); })
+    .attr("height", function(d,i,j) { return height - y0(d.corr1); })
+    .style("fill", function(d) {
+        if ( Math.abs(d.corr1-d.corr2)<=0.05)
+        {
+            return "red";
+        }
+        else if ( Math.abs(d.corr1 - d.corr2)>=0.6)
+        {
+            return "green";
+        }
+        else
+        {
+            return "#000000";
+        }
+        
+
+    })
+    .on("mouseover",tip_d1.show)
+    .on("mouseout", tip_d1.hide);
+  bars.append("rect")
+      .attr("class", "bar2")
+      .attr("x", function(d) { return x(d.bit) + x.rangeBand()/2; })
+      .attr("width", x.rangeBand() / 2)
+      .attr("y", function(d) { return y1(d.corr2); })
+    .attr("height", function(d,i,j) { return height - y1(d.corr2); })
+    .style("fill", function(d) {
+        if ( Math.abs(d.corr1-d.corr2)<=0.05)
+        {
+            return "red";
+        }
+        else if ( Math.abs(d.corr1 - d.corr2) >=0.6)
+        {
+            return "green";
+        }
+        else
+        {
+            return "#8c8c8c";
+        }
+        
+
+    })
+    .on("mouseover",tip_d2.show)
+    .on("mouseout", tip_d2.hide);
+});
+}
+function type(d) {
+  d.corr1 = +d.corr1;
+  return d;
+}
+</script>

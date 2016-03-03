@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </script>
+
+</head>
+
+<style>
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 5px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.y
+{
+    font:12px sans-serif;
+}
+
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 2;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+
+.tip_v
+{
+    color:white;
+    font-size:140%;
+
+}
+
+.tip_h
+{
+    color:red;
+    font-size:140%;
+}
+
+
+
+
+
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<body>
+    <div>
+    </div>
+    <br/><br/>
+</body>
+<script>
+
+var margin = {top: 120, right: 20, bottom: 30, left: 140},
+    width = 1920 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+    
+var dist =(width/255)-1;
+    
+    
+    
+    
+    
+
+
+
+
+
+
+var svg = d3.select("div").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("new_tika.json",function(error, data) {
+  
+   
+  
+  var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+            return '  <span class = "tip_h">mimetype</span>'+'<span class="tip_v">' + d.type +'<span class = "tip_h"> count:</span>'+'<span class="tip_v">' + d.value +"</span>"
+
+  })
+  
+  
+    var y = d3.scale.linear()
+    .domain([0,d3.max(data.types, function(d) { return d.value; })])
+    .range([height, 40]);
+  
+  var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10);
+  
+  svg.call(tip);
+  
+  
+  if (error) 
+  {
+        return console.warn(error);
+  }
+
+  x.domain([0,255]);
+var heightScale = d3.scale.linear()
+                              .domain([0,d3.max(data.types, function(d) { return d.value; })])
+                              .range([height-10,0]);
+ // y.domain([0, d3.max(data, function(d) { return d.freq *50; })]);
+
+ /*
+    var xAxis = d3.svg.axis()
+    .scale(x)
+    .tickFormat(function(d,i) { return data.types[i].type; })
+    .orient("bottom")
+    .ticks(255);
+    
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+      */
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Count");
+
+  svg.selectAll(".bar")
+      .data(data.types)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d,i) { 
+      //console.log(d.c);
+      return i*10; }
+      )
+      .attr("width", dist)
+      .attr("y", function(d) { console.log(d.value);return heightScale(d.value); })
+      .attr("height", function(d) { return height - heightScale(d.value); })
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
+});
+
+
+
+</script>

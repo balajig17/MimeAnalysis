@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<head>
+<meta charset="utf-8">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </script>
+
+</head>
+
+<style>
+
+body {
+  margin: 0;s
+}
+
+text {
+    font-family: sans-serif;
+    font-size: 12px;
+    fill: white;
+}
+#tooltip {
+    position: absolute;
+    width: 200px;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -mox-box-shadow: 4px 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rbga(0, 0, 0, 0.4) pointer-events: none;
+}
+#tooltip.hidden {
+    opacity: 0;
+}
+#tooltip p {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 15px;
+}
+
+
+.axis path,.axis line 
+{
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+.axis text 
+{
+	font-family: sans-serif;
+	font-size: 11px;
+}
+
+.tick text
+{
+    fill: black;
+    font-weight: bold;
+}
+
+
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 5px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+
+
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 2;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+.tip_v
+{
+    color:white;
+    font-size:200%;
+
+}
+
+.tip_h
+{
+    color:red;
+    font-size:200%;
+}
+
+
+</style>
+<body>
+    
+    
+     <div class="form-horizontal">
+    <div class="form-group">
+        <label for="fileType" class="col-sm-2 control-label">File Type</label>
+             <div class="col-sm-6">
+              <select id="fileType" class="form-control">
+                   <option value="image_gif">GIF</option>
+                   <option value="image_png">PNG</option>
+                   <option value="application_pdf">PDF</option>
+                   <option value="audio_mpeg">MPEG</option>
+                   <option value="audio_mp4">MP4</option>
+                   <option value ="text_x-matlab">MATLAB</option>
+                   <option value ="application_dif+xml">DIFF_XML</option>
+                   <option value ="application_msword">MS_WORD</option>
+                   <option value ="application_rdf+xml">RDF</option>
+                   <option value ="application_rss+xml">RSS</option>
+                   <option value = "application_vnd.google-earth.kml+xml">GOOGLE EARTH(KML)</option>
+                   <option value = "application_vnd.ms-excel">EXCEL VND</option>
+                   <option value = "application_x-sh">BOURNE SHELL SCRIPT</option>
+                   <option value = "application_xhtml+xml">XHTML</option>
+                   <option value = "image_svg+xml">IMAGE SVG</option>
+                   <option value = "application_zip">ZIP</option>
+                   <option value = "text_html">HTML</option>
+                   <option value = "image_jpeg">JPEG</option>
+                   <option value ="application_octet-stream">OCTET STREAM</option>
+
+                   
+               </select>
+    </div>
+          </div>
+    <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-6">
+             <button id="file_load" class="btn btn-default" onclick="load()">Load JSON!</button>
+        </div>
+        </div>
+        </div>
+        
+        <div id ="visualization"> </div>
+    
+</body>
+
+
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+
+
+
+
+ 
+
+
+function load()
+{
+ 
+    var filename = document.getElementById( "fileType" ).value;
+    filename+="_matrix_";
+    document.getElementById("visualization").innerHTML = "";
+    //First create the canvas and then append it.
+    var height=1900;
+    var sideSize=7;
+    var width=1600;
+    var canvas = d3.select("#visualization")
+                   .append("svg")
+                   .attr("width",width)
+                   .attr("height",height);
+    d3.json(filename+".json",function(error,data)
+    {
+
+
+       
+
+
+        var hPadding =0;
+        var wPadding=0;
+        
+        
+        
+         //To fit the graph into the page
+        var xScale =d3.scale.linear()
+                            .domain([0,255])
+                            .range([0,255*sideSize+wPadding]);
+                   
+        var yScale =d3.scale.linear()
+                            .domain([0,255])
+                            .range([0,255*sideSize+hPadding]);
+        //Axises
+        var yScaleInv=d3.scale.linear()
+                            .domain([0,255])
+                            .range([height,height-(255*sideSize)]);
+                            
+        var xAxis = d3.svg.axis()
+                          .scale(xScale)
+                          .orient("top")
+                          .ticks(20);
+        var yAxis = d3.svg.axis()
+                          .scale(yScaleInv)
+                          .orient("right")
+                          .ticks(20);
+        
+        
+        //Append To canvas
+        canvas.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate("+wPadding+"," + (height - hPadding) + ")")
+                    .call(xAxis);
+        canvas.append("g")
+              .attr("class","axis")
+              .attr("transform", "translate(" + wPadding + ",0)")
+              .call(yAxis);
+        
+        
+        
+        var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function(d) {
+        return '  <span class = "tip_h">xByte:</span>'+'<span class="tip_v">' + d.s +"</span> ,"+ '<span class="tip_h"> yByte:</span>' + '<span class = "tip_v">'+d.t+'</span><span class="tip_h"> val: </span>'+'<span class ="tip_v">'+d.v+"</span>"+'<br/>'+'  <span class = "tip_h">xChar:</span>'+'<span class="tip_v">' + String.fromCharCode(d.s) +"</span> ,"+ '<span class="tip_h"> yChar:</span>' + '<span class = "tip_v">'+String.fromCharCode(d.t)+'</span>'
+        ;
+      })
+        canvas.call(tip);
+        
+       
+        canvas.call(tip);
+        
+        var opacity = d3.scale.linear()
+                        .domain([0.9,1])
+                        .range([0,1]);
+
+        var color=d3.scale.category10()
+        if(error)
+        {
+            return console.warn(error);
+        }
+        console.log("drawing other rectangles");
+        //Create the circles for the data.
+        canvas.selectAll("rect")
+          .data(data.data)
+          .enter()
+          .append("rect")
+          .attr("x",function(d,i) {return parseInt(d.s) * sideSize + wPadding;})
+          .attr("y",function(d,i){return height-  (parseInt(d.t) * sideSize + hPadding);} )
+          .attr("width",sideSize)
+          .attr("height",sideSize)
+          .attr("fill-opacity",function(d){return  opacity(d.v);})
+          .style("fill", function(d){return "red";})
+          .on("mouseover",tip.show)
+          .on("mouseout", tip.hide)
+          
+       
+    });    
+}        
+
+function getRelevantJSONItem(s,t,arr)
+{
+    for(var i = 0;i<arr.length;i++)
+    {
+        if(arr[i].s==s && arr[i].t==t)
+        {
+            return arr[i].v
+        }
+    }
+    return -1
+
+
+}           
+              
+
+      
+
+</script>
