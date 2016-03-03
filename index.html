@@ -23,7 +23,8 @@
     <body>
        <nav class="navbar navbar-fixed-top navbar-inverse">
         <ul class="nav navbar-nav">
-            <li class="active"><a data-toggle="pill" href="#bfa">Byte Frequency Analysis</a></li>
+            <li class="active"><a data-toggle="pill" href="#pie">Mimetype Analysis</a></li>
+            <li><a data-toggle="pill" href="#bfa">Byte Frequency Analysis</a></li>
             <li><a data-toggle="pill" href="#bfdc">Byte Frequency Distribution Correlation</a></li>
             <li><a data-toggle="pill" href="#bfcc">Byte Frequency Cross Correlation</a></li>
             <li><a data-toggle="pill" href="#fht">File Header Trailer Analysis</a></li>
@@ -34,7 +35,22 @@
         <br>
         <br>
         <div class="tab-content">
-            <div id="bfa" class="tab-pane fade in active">
+           <div id="pie" class="tab-pane fade in active">
+               <ul class="nav nav-pills">
+                   <li class="active"><a data-toggle="pill" href="#pre">Before Analysis</a></li>
+                   <li><a data-toggle="pill" href="#post">After Analysis</a></li>
+               </ul>
+               <div class="tab-content">
+                   <div id="pre" class="tab-pane fade in active">
+                       <iframe src="filetypes_Pie_Chart/pie_chart_old.html" frameborder="1" height="100%"                                     width="100%" ></iframe>
+                   </div>
+                   <div id="post" class="tab-pane fade">
+                       <iframe src="filetypes_Pie_Chart/pie_chart_new.html" frameborder="1" height="100%"                                     width="100%" ></iframe>
+                   </div>
+               </div>
+                
+            </div>
+            <div id="bfa" class="tab-pane fade">
                 <iframe src="combined_BFA/bfa.html" frameborder="1" height="100%" width="100%" ></iframe>
             </div>
             <div id="bfdc" class="tab-pane fade">
