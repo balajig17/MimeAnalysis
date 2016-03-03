@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </script>
+
+</head>
+<style>
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 5px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.y
+{
+    font:12px sans-serif;
+}
+
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 2;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+
+.tip_v
+{
+    color:white;
+    font-size:140%;
+
+}
+
+.tip_h
+{
+    color:red;
+    font-size:140%;
+}
+
+
+
+
+
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<body>
+
+    
+      <div class="form-horizontal">
+    <div class="form-group">
+        <label for="fileType" class="col-sm-2 control-label">File Type</label>
+             <div class="col-sm-6">
+              <select id="fileType" class="form-control">
+                   <option value="image_gif">GIF</option>
+                   <option value="image_png">PNG</option>
+                   <option value="application_pdf">PDF</option>
+                   <option value="audio_mp4">MP4</option>
+                   <option value ="text_x-matlab">MATLAB</option>
+                   <option value ="application_dif+xml">DIFF_XML</option>
+                   <option value ="application_msword">MS_WORD</option>
+                   <option value ="application_rdf+xml">RDF</option>
+                   <option value ="application_rss+xml">RSS</option>
+                   <option value = "application_vnd.google-earth.kml+xml">GOOGLE EARTH(KML)</option>
+                   <option value = "application_vnd.ms-excel">EXCEL VND</option>
+                   <option value = "application_x-sh">BOURNE SHELL SCRIPT</option>
+                   <option value = "application_xhtml+xml">XHTML</option>
+                   <option value = "image_svg+xml">IMAGE SVG</option>
+                   <option value = "application_zip">ZIP</option>
+                   <option value = "text_html">HTML</option>
+                   <option value = "image_jpeg">JPEG</option>
+                   <option value ="application_octet-stream">OCTET STREAM</option>
+
+                   
+               </select>
+    </div>
+          </div>
+    <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-6">
+             <button id="file_load" class="btn btn-default" onclick="load()">Load JSON!</button>
+        </div>
+        </div>
+        </div>
+        
+        <div id ="visualization"> </div>
+
+</body>
+<script>
+
+
+
+
+
+function load()
+{
+    
+    var filename = document.getElementById( "fileType" ).value;
+    filename+="_BFA_";
+    document.getElementById("visualization").innerHTML = "";
+    
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+        width = 1920 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
+        
+    var dist =(width/255)-1;
+        
+        
+        
+        
+        
+    var y = d3.scale.linear()
+        .range([height, 40]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10, "%");
+
+    var svg = d3.select("#visualization").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.json(filename+".json",function(error, data) {
+      
+       
+      var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function(d) {
+            return '  <span class = "tip_h">byte</span>'+'<span class="tip_v">' + d.c +'<span class = "tip_h"> char: </span>'+'<span class="tip_v">' + String.fromCharCode(d.c) +"</span>"+'<span class = "tip_h"> freq: </span>'+'<span class="tip_v">' +d.freq  +"</span>"
+
+      })
+      
+      svg.call(tip);
+      
+      
+      if (error) 
+      {
+            return console.warn(error);
+      }
+
+      x.domain(data.data.map(function(d) { return d.c; }));
+      var heightScale = d3.scale.linear()
+                                  .domain([0,1])
+                                  .range([height,40]);
+     // y.domain([0, d3.max(data, function(d) { return d.freq *50; })]);
+
+      svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+      svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis)
+        .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Frequency");
+
+      svg.selectAll(".bar")
+          .data(data.data)
+        .enter().append("rect")
+          .attr("class", "bar")
+          .attr("x", function(d,i) { 
+          //console.log(d.c);
+          var r = x(d.c);
+          return x(d.c); }
+          )
+          .attr("width", dist)
+          .attr("y", function(d) { console.log(d.freq);return heightScale(d.freq); })
+          .attr("height", function(d) { return height - heightScale(d.freq); })
+          .on('mouseover', tip.show)
+          .on('mouseout', tip.hide);
+    });
+}
+
+
+
+</script>
